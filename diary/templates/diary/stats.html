@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}통계 - WellLog{% endblock %}
+{% block content %}
+{% if not has_logs %}
+<div class="card empty-card">
+  <h2>아직 기록이 없어요</h2>
+  <p>오늘의 기분을 한 번 기록하면 여기에 주간 그래프와 AI 리포트가 나타나요.</p>
+  <a class="btn" href="{% url 'log_create' %}">첫 기록 남기기</a>
+</div>
+{% else %}
+<h2>이번 주 기분</h2>
+<div class="card">
+  {% if week_empty %}<p class="hint">최근 7일 동안 기록이 없어요. 오늘 기분을 기록해 보세요.</p>{% endif %}
+  <canvas id="weekChart" height="200"></canvas>
+</div>
+{% endif %}
+
+<div class="row cal-head">
+  <a href="?month={{ prev }}">◀ 이전 달</a>
+  <h2>{{ year }}년 {{ month }}월</h2>
+  <a href="?month={{ next }}">다음 달 ▶</a>
+</div>
+
+<div class="card">
+  <table class="calendar">
+    <thead>
+      <tr>
+        <th class="sun">일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th class="sat">토</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for week in weeks %}
+        <tr>
+          {% for cell in week %}
+            <td class="{% if not cell.in_month %}other{% endif %} {% if cell.today %}today{% endif %}">
+              {% if cell.log %}
+                <a class="day score-bg-{{ cell.log.score }}" href="{% url 'log_update' cell.log.pk %}"
+                   title="{{ cell.log.get_score_display }}">{{ cell.date.day }}</a>
+              {% else %}
+                <span class="day">{{ cell.date.day }}</span>
+              {% endif %}
+            </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="legend">
+    <span><i class="score-bg-1"></i>1</span>
+    <span><i class="score-bg-2"></i>2</span>
+    <span><i class="score-bg-3"></i>3</span>
+    <span><i class="score-bg-4"></i>4</span>
+    <span><i class="score-bg-5"></i>5</span>
+  </div>
+</div>
+
+{% if has_logs %}
+<h2 class="section">AI 리포트</h2>
+<div class="card">
+  <p class="hint">최근 7일 기록을 AI가 요약하고 조언해 줘요.</p>
+  <button type="button" id="reportBtn" class="btn" data-url="{% url 'ai_report' %}">AI 리포트 받기</button>
+  <p id="reportBox" class="report" hidden></p>
+</div>
+{% endif %}
+{% csrf_token %}
+
+{{ chart|json_script:"chart-data" }}
+<script src="{% static 'diary/vendor/chart.umd.min.js' %}"></script>
+<script src="{% static 'diary/stats.js' %}"></script>
+{% endblock %}

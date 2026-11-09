@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}내 기록 - WellLog{% endblock %}
+{% block content %}
+<div class="row">
+  <h2>내 기분 기록</h2>
+  <a class="btn" href="{% url 'log_create' %}">+ 새 기록</a>
+</div>
+
+{% if logs %}
+  <ul class="logs">
+    {% for log in logs %}
+      <li class="card score-{{ log.score }}">
+        <div class="row">
+          <strong>{{ log.date|date:"Y년 n월 j일" }}</strong>
+          <span class="badge">{{ log.get_score_display }}</span>
+        </div>
+        {% if log.memo %}<p>{{ log.memo|linebreaksbr }}</p>{% endif %}
+        <div class="actions">
+          <a href="{% url 'log_update' log.pk %}">수정</a>
+          <a href="{% url 'log_delete' log.pk %}">삭제</a>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="empty">아직 기록이 없어요. 오늘의 기분을 남겨 보세요!</p>
+{% endif %}
+{% endblock %}
