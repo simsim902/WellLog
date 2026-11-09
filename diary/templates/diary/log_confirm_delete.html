@@ -3,11 +3,14 @@
 {% block content %}
 <div class="card narrow">
   <h2>정말 삭제할까요?</h2>
-  <p>{{ log.date|date:"Y년 n월 j일" }} · {{ log.get_score_display }}</p>
+  <p>{{ log.date|date:"Y년 n월 j일" }} · <span class="badge s-{{ log.score }}">{{ log.get_score_display }}</span></p>
+  <p class="hint">삭제한 기록은 되돌릴 수 없어요.</p>
   <form method="post">
     {% csrf_token %}
-    <button type="submit" class="btn danger">삭제</button>
-    <a href="{% url 'log_list' %}">취소</a>
+    <div class="form-actions">
+      <button type="submit" class="btn danger">삭제</button>
+      <a class="btn-ghost" href="{% url 'log_list' %}">취소</a>
+    </div>
   </form>
 </div>
 {% endblock %}

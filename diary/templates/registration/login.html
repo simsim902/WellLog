@@ -5,9 +5,9 @@
   <h2>로그인</h2>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn">로그인</button>
+    {{ form.as_div }}
+    <button type="submit" class="btn btn-block">로그인</button>
   </form>
-  <p>계정이 없나요? <a href="{% url 'signup' %}">회원가입</a></p>
+  <p class="alt-link">계정이 없나요? <a href="{% url 'signup' %}">회원가입</a></p>
 </div>
 {% endblock %}

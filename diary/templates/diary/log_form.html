@@ -5,9 +5,21 @@
   <h2>{{ title }}</h2>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn">저장</button>
-    <a href="{% url 'log_list' %}">취소</a>
+    {{ form.non_field_errors }}
+    {# 라벨을 한국어로 직접 표시한다 (기능은 그대로, 화면 문구만 다름) #}
+    {% for field in form %}
+      <div>
+        <label for="{{ field.id_for_label }}">
+          {% if field.name == 'date' %}날짜{% elif field.name == 'score' %}기분 점수{% elif field.name == 'memo' %}메모 <span class="optional">(선택)</span>{% else %}{{ field.label }}{% endif %}
+        </label>
+        {{ field.errors }}
+        {{ field }}
+      </div>
+    {% endfor %}
+    <div class="form-actions">
+      <button type="submit" class="btn">저장</button>
+      <a class="btn-ghost" href="{% url 'log_list' %}">취소</a>
+    </div>
   </form>
 </div>
 {% endblock %}

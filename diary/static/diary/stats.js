@@ -4,6 +4,17 @@
 const chartCanvas = document.getElementById('weekChart');
 if (chartCanvas && typeof Chart !== 'undefined') {
   const data = JSON.parse(document.getElementById('chart-data').textContent);
+
+  // 색은 style.css의 변수(--s1-bg ~ --s5-bg, --line)를 그대로 읽어 온다.
+  // 그래서 목록, 달력, 범례, 그래프가 항상 같은 색을 쓴다.
+  const css = getComputedStyle(document.documentElement);
+  const cssVar = (name) => css.getPropertyValue(name).trim();
+  const scoreColor = (score) => cssVar(`--s${score}-bg`);
+  const SCORE_NAMES = { 1: '매우 나쁨', 2: '나쁨', 3: '보통', 4: '좋음', 5: '매우 좋음' };
+
+  Chart.defaults.font.family = cssVar('--font');
+  Chart.defaults.color = cssVar('--muted');
+
   new Chart(chartCanvas, {
     type: 'line',
     data: {
@@ -11,18 +22,36 @@ if (chartCanvas && typeof Chart !== 'undefined') {
       datasets: [{
         label: '기분 점수',
         data: data.scores,      // null인 날은 점이 찍히지 않는다
-        borderColor: '#2a8f6a',
-        backgroundColor: '#2a8f6a',
+        borderColor: cssVar('--line'),
+        borderWidth: 2,
         tension: 0.25,
         spanGaps: true,         // 기록 없는 날은 건너뛰고 선을 이어 준다
-        pointRadius: 5,
+        pointRadius: 8,
+        pointHoverRadius: 10,
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        // 점마다 그날 점수에 맞는 색 (낮으면 파랑, 높으면 주황)
+        pointBackgroundColor: data.scores.map((s) => (s ? scoreColor(s) : 'transparent')),
       }],
     },
     options: {
       scales: {
-        y: { min: 1, max: 5, ticks: { stepSize: 1 } },
+        // 점이 가장자리에 걸리지 않게 위아래로 0.5씩 여유를 두고, 눈금은 점수인 1~5에만 찍는다
+        y: {
+          min: 0.5,
+          max: 5.5,
+          afterBuildTicks: (axis) => { axis.ticks = [1, 2, 3, 4, 5].map((value) => ({ value })); },
+          grid: { color: cssVar('--border') },
+          border: { display: false },
+        },
+        x: { grid: { display: false } },
       },
-      plugins: { legend: { display: false } },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: { label: (ctx) => ` ${ctx.parsed.y}점 · ${SCORE_NAMES[ctx.parsed.y]}` },
+        },
+      },
     },
   });
 } else if (chartCanvas) {

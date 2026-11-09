@@ -13,15 +13,16 @@
     <nav>
       {% if user.is_authenticated %}
         <span class="who">{{ user.username }}님</span>
-        <a href="{% url 'log_create' %}">기록하기</a>
-        <a href="{% url 'stats' %}">통계</a>
+        <a href="{% url 'log_list' %}" {% if request.resolver_match.url_name == 'log_list' %}class="active"{% endif %}>내 기록</a>
+        <a href="{% url 'log_create' %}" {% if request.resolver_match.url_name == 'log_create' %}class="active"{% endif %}>기록하기</a>
+        <a href="{% url 'stats' %}" {% if request.resolver_match.url_name == 'stats' %}class="active"{% endif %}>통계</a>
         <form method="post" action="{% url 'logout' %}" class="inline">
           {% csrf_token %}
           <button type="submit" class="link">로그아웃</button>
         </form>
       {% else %}
-        <a href="{% url 'login' %}">로그인</a>
-        <a href="{% url 'signup' %}">회원가입</a>
+        <a href="{% url 'login' %}" {% if request.resolver_match.url_name == 'login' %}class="active"{% endif %}>로그인</a>
+        <a href="{% url 'signup' %}" {% if request.resolver_match.url_name == 'signup' %}class="active"{% endif %}>회원가입</a>
       {% endif %}
     </nav>
   </header>
