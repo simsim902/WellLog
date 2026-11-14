@@ -62,6 +62,22 @@ if (chartCanvas && typeof Chart !== 'undefined') {
 }
 
 // ---- AI 리포트 버튼 ----
+// AI 답변의 마크다운 별표를 처리한다: **굵게** -> 굵은 글씨, 줄 앞의 "* " -> "• ".
+// innerHTML을 쓰지 않고 <strong> 요소를 직접 만들어서, AI 응답이 HTML로 해석되지 않게 한다.
+function renderReport(box, text) {
+  box.textContent = '';
+  const cleaned = text.replace(/^(\s*)[*-]\s+/gm, '$1• ');
+  cleaned.split(/\*\*(.+?)\*\*/gs).forEach((part, i) => {
+    if (i % 2 === 1) {
+      const strong = document.createElement('strong');
+      strong.textContent = part;
+      box.appendChild(strong);
+    } else {
+      box.appendChild(document.createTextNode(part.replace(/\*\*/g, '')));   // 짝 없는 ** 는 지운다
+    }
+  });
+}
+
 const FRIENDLY_ERROR = '지금은 리포트를 만들 수 없어요. 잠시 후 다시 시도해 주세요.';
 const reportBtn = document.getElementById('reportBtn');
 const reportBox = document.getElementById('reportBox');
@@ -86,7 +102,7 @@ if (reportBtn && reportBox) {
       });
       const body = await res.json();   // 서버 오류 화면(HTML)이 오면 여기서 예외 → 아래 catch
       if (res.ok && body.report) {
-        reportBox.textContent = body.report;   // textContent: AI 응답을 HTML로 해석하지 않는다
+        renderReport(reportBox, body.report);   // 텍스트 노드와 <strong>만 만든다 (HTML로 해석하지 않음)
       } else {
         reportBox.classList.add('error');
         reportBox.textContent = body.error || FRIENDLY_ERROR;
