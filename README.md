@@ -57,28 +57,6 @@ python manage.py runserver
 > `.\venv\Scripts\Activate.ps1`이 보안 정책 때문에 막히면, PowerShell에서 `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`를 한 번 실행한 뒤 다시 시도하세요.
 
 
-## 시연용 데이터
-
-발표나 시연에 쓸 수 있도록 샘플 데이터를 넣는 명령어를 만들어 두었습니다.
-
-```powershell
-python manage.py seed_demo
-```
-
-- `demo` 계정을 만들고(이미 있으면 재사용), 오늘 기준 최근 30일치 기분 기록을 넣습니다.
-- 여러 번 실행해도 안전합니다. 같은 날짜의 기록은 덮어씁니다.
-- 다른 계정의 기록은 건드리지 않습니다.
-
-| 항목 | 값 |
-| --- | --- |
-| 아이디 | `demo` |
-| 비밀번호 | `demo1234!` |
-
-## 테스트
-
-```powershell
-python manage.py test diary
-```
 
 ## 폴더 구조
 
