@@ -56,7 +56,6 @@ python manage.py runserver
 
 > `.\venv\Scripts\Activate.ps1`이 보안 정책 때문에 막히면, PowerShell에서 `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`를 한 번 실행한 뒤 다시 시도하세요.
 
-`.env` 파일에는 비밀 정보(API 키)가 들어 있어서 GitHub에 올라가지 않습니다. 선택 사항으로 `GEMINI_MODEL=모델이름`을 추가하면 사용하는 AI 모델을 바꿀 수 있습니다.
 
 ## 시연용 데이터
 
