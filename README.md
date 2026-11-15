@@ -82,8 +82,8 @@ WellLog/
 │  ├─ urls.py                 주소 연결
 │  └─ tests.py                자동 테스트
 ├─ docs/
-│  ├─ poster/                 포스터 PDF (추가 예정)
-│  └─ report/                 결과보고서 PDF (추가 예정)
+│  ├─ poster/                 포스터 PDF, PNG
+│  └─ report/                 결과보고서 PDF
 ├─ .env.example               .env 파일 작성 예시 (API 키는 비어 있음)
 ├─ manage.py                  Django 실행 도구
 └─ requirements.txt           필요한 패키지 목록
