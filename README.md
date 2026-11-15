@@ -118,4 +118,4 @@ WellLog/
 
 ---
 
-시연 영상: (추가 예정)
+시연 영상: https://youtu.be/4Ryg6eZc1lE
